@@ -15,5 +15,6 @@ app.get('/', (req, res) => {
 
 // RUTAS
 app.use('/movies', require('./src/routes/movies'))
+app.use('/character', require('./src/routes/character'))
 
 module.exports = app

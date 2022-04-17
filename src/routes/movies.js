@@ -2,7 +2,7 @@ const router = require('express').Router() // Rutas
 const Movie = require('../models/movies') // Schema
 const errorHandler = require('../utils/errorHandler') // Error del servidor
 const seedsMovies = require('../seeds/arrayMovies') //Array de Movies
-module.exports = router // Preguntar Alfredo esto y lo de abajo
+module.exports = router // Preguntar esto y lo de abajo
 
 
 // Crear una peli
@@ -48,13 +48,6 @@ generateMoviesSeeds();
 //====> // y sin return, pq pq tiene try catch
 
 
-// 1. Crear un endpoint **get** que devuelva todas las películas.
-// 2. Crear un endpoint **get** que devuelva una película según su **_id**
-// 3. Crear un endpoint **get** que devuelva un valor por su titulo.
-// 4. Crear un endpoint **get** que devuelva los documentos según su género.
-// 5. Crear un endpoint **get** que devuelva las películas que se han estrenado a partir de 2010.
-
-
 // Obtener todas las pelis
 router.get('/', async (req, res) => {
   const { title, director, year, genre } = req.query  //====>>  no es body, es que aunq no use params??
@@ -72,36 +65,51 @@ router.get('/', async (req, res) => {
 
 // Crear un endpoint **get** que devuelva una película según su **_id**
 // get con query params
-router.get('/:id', async (req, res) => {
-  const moviesId = req.params.id
+// router.get('/:id', async (req, res) => {
+//   const moviesId = req.params.id
 
-  try {
-    const foundMovies = await Movie.findById(moviesId)
+//   try {
+//     const foundMovies = await Movie.findById(moviesId)
 
-    res.json({ message: 'Peliculas por id recibida', movie: foundMovies }) //====>> recuerdame que es movie
+//     res.json({ message: 'Peliculas por id recibida', movie: foundMovies }) //====>> recuerdame que es movie
 
-  } catch (err) {
-    errorHandler(err, res)
-  }
-})
+//   } catch (err) {
+//     errorHandler(err, res)
+//   }
+// })
 
 
 // 3. Crear un endpoint **get** que devuelva un valor por su titulo.
-router.get('/:title', async (req, res) => {
+// router.get('/:title', async (req, res) => {
 
-  const moviesTitle = req.params.title
+//   const moviesTitle = req.params.title
 
-  try {
-    const foundMovies = await Movie.findOne({ title: moviesTitle })
+//   try {
+//     const foundMovies = await Movie.findOne({ title: moviesTitle })
 
-    res.json({ message: 'Peliculas por titulo recibida', movie: foundMovies }) //====>> recuerdame que es movie
+//     res.json({ message: 'Peliculas por titulo recibida', movie: foundMovies })                              //====>> recuerdame que es movie
 
-  } catch (err) {
-    errorHandler(err, res)
-  }
-})
+//   } catch (err) {
+//     errorHandler(err, res)
+//   }
+// })
 
 
+
+// 3. Crear un endpoint **get** que devuelva un valor por su genero.
+// router.get('/:genre', async (req, res) => {
+
+//   const moviesGenre = req.params.genre
+
+//   try {
+//     const foundGenreMovies = await Movie.find({ genre: moviesGenre })
+
+//     res.json({ message: 'Peliculas por genero recibida', movie: foundGenreMovies })                              //====>> recuerdame que es movie
+
+//   } catch (err) {
+//     errorHandler(err, res)
+//   }
+// })
 
 // // Obtener una peli
 // router.get('/:id', async (req, res) => {
@@ -118,45 +126,32 @@ router.get('/:title', async (req, res) => {
 // })
 
 
+// Crear un endpoint get que devuelva las películas que se han estrenado a partir de 2010
+router.get('/character/year/:year', async (req, res) => {
 
-// // Actualizar una peli
-// router.put('/:id', async (req, res) => {
-//   const productId = req.params.id
-//   const { name, description, price, type } = req.body
+  const { year } = req.params;
 
-//   try {
-//     const updatedProductData = {
-//       name,
-//       description,
-//       price,
-//       type
-//     }
-
-//     const updatedProduct = await Product.findByIdAndUpdate(productId, updatedProductData, { new: true })
-
-//     res.json({ message: 'Product updated successfully', product: updatedProduct })
-
-//   } catch (err) {
-//     errorHandler(err, res)
-//   }
-
-// })
-
-// // Eliminar
-// router.delete('/:id', async (req, res) => {
-//   const productId = req.params.id
-
-//   try {
-//     const deletedProduct = await Product.findByIdAndDelete(productId)
-
-//     res.json({ message: 'Product deleted successfully', product: deletedProduct })
-
-//   } catch (err) {
-//     errorHandler(err, res)
-//   }
-// })
+  try {
+    const moviesByYear = await Character.find({ year: { $gte: year } });
+    return res.status(200).json({ moviesByYear })
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
 
 
+router.get('/character/age/:age', async (req, res) => {
+  const { age } = req.params;
 
-// ----
-// Proxima clase
+  try {
+    const characterByAge = await Character.find({ age: { $gt: age } });
+    return res.status(200).json(characterByAge);
+  } catch (err) {
+    errorHandler(err, res)
+  }
+});
+// -Usando (**$gt**) mayores de
+// - Si usamos **$lt (less than)** encontraremos valores menores al que usemos.
+// - Si usamos **$lte (less than equal)** encontraremos valores menores o igual al usado.
+// - Si usamos **$gt (greater than)** encontraremos los valores mayores al usado.
+// - Si usamos **$gte (greater than equal)** encontraremos los valores mayores e iguales al usado.
