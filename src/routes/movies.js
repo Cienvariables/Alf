@@ -45,7 +45,7 @@ const generateMoviesSeeds = async () => {
 }
 generateMoviesSeeds();
 
-//====> Alfredo // y sin return, pq pq tiene try catch
+//====> // y sin return, pq pq tiene try catch
 
 
 // 1. Crear un endpoint **get** que devuelva todas las películas.
@@ -57,7 +57,7 @@ generateMoviesSeeds();
 
 // Obtener todas las pelis
 router.get('/', async (req, res) => {
-  const { title, director, year, genre } = req.query  //====>> Alfredo no es body, es quey aunq no use params??
+  const { title, director, year, genre } = req.query  //====>>  no es body, es que aunq no use params??
 
   try {
     const allMoviesList = await Movie.find()
@@ -92,7 +92,7 @@ router.get('/:title', async (req, res) => {
   const moviesTitle = req.params.title
 
   try {
-    const foundMovies = await Movie.find(moviesTitle)
+    const foundMovies = await Movie.findOne({ title: moviesTitle })
 
     res.json({ message: 'Peliculas por titulo recibida', movie: foundMovies }) //====>> recuerdame que es movie
 
